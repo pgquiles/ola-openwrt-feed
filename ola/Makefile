@@ -8,12 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ola
-PKG_VERSION:=0.8.27
+#PKG_VERSION:=0.8.27
+PKG_VERSION:=0.9.3
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://open-lighting.googlecode.com/files
-PKG_SHA1SUM:=e9826752eecb5d011634b0d7cef270a11adc06fb
+PKG_SOURCE_URL:=https://github.com/OpenLightingProject/ola/releases/download/$(PKG_VERSION)/
+PKG_SHA1SUM:=f6a81087761218063a4bb8006b73ffa407cd0170
+PKG_USE_MIPS16:=0
 
 PKG_FIXUP:=libtool
 PKG_INSTALL:=1
@@ -21,7 +23,12 @@ PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 
 PKG_BUILD_DEPENDS:=protobuf
+#PKG_BUILD_DEPENDS:=+ola/host +protobuf
 
+#HOST_BUILD_DEPENDS:=+protobuf/host
+#HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/ola-$(PKG_VERSION)
+
+#include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 
 #PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
@@ -31,12 +38,19 @@ include $(INCLUDE_DIR)/package.mk
 #	$(CP) /home/markus/svn/open-lighting/** $(PKG_BUILD_DIR)/
 #endef
 
+#define Host/Compile
+#endef
+
+#define Host/Install
+#endef
+
 define Package/ola
   SECTION:=ola
   CATEGORY:=Open Lighting Architecture
   TITLE:=Open Lighting Architecture Daemon
   URL:=http://code.google.com/p/linux-lighting/
   DEPENDS:=+libartnet +protobuf +libmicrohttpd +libusb-1.0 +libuuid +libstdcpp +libpthread +librt +zlib +libncurses
+  MENU:=1
 endef
 
 define Package/ola/description
@@ -45,6 +59,11 @@ define Package/ola/description
   protocols. It enables software controllers talk to DMX hardware.
 endef
 
+#HOST_CONFIGURE_ARGS += \
+#        --disable-examples \
+#        --disable-unittests \
+        
+        
 define Build/Configure
   $(call Build/Configure/Default,--disable-dependency-tracking --disable-static --disable-slp --disable-root-check --disable-fatal-warnings --disable-unittests)
 endef
@@ -70,4 +89,5 @@ define Package/ola/install
 	$(INSTALL_BIN) ./files/olad.init $(1)/etc/init.d/olad
 endef
 
+#$(eval $(call HostBuild))
 $(eval $(call BuildPackage,ola))

@@ -8,7 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=boblight
-PKG_REV:=449
+#PKG_REV:=449
+PKG_REV:=478
 PKG_VERSION:=$(PKG_REV)
 PKG_RELEASE:=1
 
@@ -32,6 +33,7 @@ define Package/boblight/Default
   URL:=http://code.google.com/p/boblight/
   DEPENDS:=+librt +uclibcxx
   #DEPENDS:=+librt $(CXX_DEPENDS)
+  MENU:=1
 endef
 
 define Package/boblight/Default/description

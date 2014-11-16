@@ -22,6 +22,7 @@ define Package/libartnet
   CATEGORY:=Libraries
   TITLE:=Libartnet is an implementation of the ArtNet protocol.
   URL:=http://code.google.com/p/linux-lighting/
+  MENU:=1
 endef
 
 define Package/libartnet/description
