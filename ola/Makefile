@@ -22,11 +22,12 @@ PKG_INSTALL:=1
 
 PKG_BUILD_PARALLEL:=1
 
-HOST_BUILD_DEPENDS:=protobuf
+HOST_BUILD_DEPENDS:=protobuf/host
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/ola-$(PKG_VERSION)
+#HOST_MAKE_FLAGS:=-I/usr/include -L/usr/lib
 
 #PKG_BUILD_DEPENDS:=protobuf
-PKG_BUILD_DEPENDS:=+ola/host protobuf
+PKG_BUILD_DEPENDS:=+ola/host +protobuf
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
@@ -60,19 +61,30 @@ define Package/ola/description
 endef
 
 HOST_CONFIGURE_ARGS += \
+	libprotobuf_CFLAGS="-I/usr/include:-L/usr/lib" libprotobuf_CPPFLAGS="/usr/include" libprotobuf_LIBS="-L/usr/lib -lprotobuf -lpthread" \
+	--with-sysroot=/usr \
+	--with-protoc=/usr/bin/protoc \
+	--disable-doxygen-doc \
+	--disable-dependency-tracking \
+	--disable-static \
+	--disable-slp \
+	--disable-root-check \
+	--disable-fatal-warnings \
         --disable-examples \
         --disable-unittests \
+        --disable-all-plugins
 
 CONFIGURE_ARGS += \
+	--disable-doxygen-doc \
 	--with-ola-protoc=$(HOST_BUILD_DIR)/protoc/ola_protoc \
 	--disable-dependency-tracking \
 	--disable-static \
 	--disable-slp \
 	--disable-root-check \
 	--disable-fatal-warnings \
-	--disable-unittests 
-#        --with-protoc=$(HOST_STAGING_DIR)/bin/protoc \
-        
+        --disable-examples \
+	--disable-unittests
+
 define Build/Configure
   $(call Build/Configure/Default,$(CONFIGURE_ARGS))
 endef
